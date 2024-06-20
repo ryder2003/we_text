@@ -72,6 +72,7 @@ class MyHomeScreenState extends State<HomeScreen> {
             case ConnectionState.waiting:
             case ConnectionState.none:
               return const Center(child: CircularProgressIndicator());
+
             case ConnectionState.active:
             case ConnectionState.done:
 
@@ -89,7 +90,7 @@ class MyHomeScreenState extends State<HomeScreen> {
                   itemCount: list.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return ChatUserCard(user: list[index],);
+                    return ChatUserCard(user__: list[index],);
                   },
                 );
               }

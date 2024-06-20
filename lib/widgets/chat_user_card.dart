@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:we_text_2/models/chat_user.dart';
 
 class ChatUserCard extends StatefulWidget{
-  final ChatUser user;
+  final ChatUser user__;
 
-  const ChatUserCard({super.key, required this.user});
+  const ChatUserCard({super.key, required this.user__});
 
 
   @override
@@ -24,8 +24,8 @@ class ChatUserCardState extends State<ChatUserCard>{
           onTap: (){},
           child: ListTile(
             leading: CircleAvatar(child: Icon(CupertinoIcons.person),),
-            title: Text(widget.user.name),
-            subtitle: Text(widget.user.about, maxLines: 1),
+            title: Text(widget.user__.name),
+            subtitle: Text(widget.user__.about, maxLines: 1),
             trailing: Text("12 PM",style: TextStyle(color: Colors.black54),),
             hoverColor: Colors.green,
 

@@ -52,14 +52,22 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     //To show Progress Loader
     Dialogs.showProgressLoader(context);
 
-    _signInWithGoogle().then((user) {
+    _signInWithGoogle().then((user) async{
       //To remove Progress Loader
       Navigator.pop(context);
       if(user != null){
         print("\nUser: ${user.user}");
         print("\nUser Additional Info: ${user.additionalUserInfo}");
         //It will redirect to homescreen after login
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=> const HomeScreen()));
+
+        if((await APIs.userExists())){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const HomeScreen()));
+        }
+        else{
+          await APIs.createUser().then((value){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const HomeScreen()));
+          });
+        }
       }
     });
   }
