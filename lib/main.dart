@@ -56,3 +56,5 @@ _initializeFirebase() async{
 
 //Media query can be initialised in the build function whose parent is App
 //Here it is Splash Screen
+
+//made a repo on github and pushed the project
