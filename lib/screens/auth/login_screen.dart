@@ -17,7 +17,7 @@ class LoginScreen extends StatefulWidget{
   }
 }
 
-class LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin{
+class LoginScreenState extends State<LoginScreen> {
   bool isAnimate = false;
 
   //One example from animation widgets flutter site
@@ -104,7 +104,7 @@ class LoginScreenState extends State<LoginScreen> with SingleTickerProviderState
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Welcome to We Text!')
+        title: Text('Welcome to WeText')
       ),
       body: Stack(
         children: [

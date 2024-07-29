@@ -24,7 +24,7 @@ class APIs{
       id: _user.uid,
       name: _user.displayName.toString(),
       email: _user.email.toString(),
-      about: "Hey, I'm using We Text!",
+      about: "Hey, I'm using WeText!",
       image: _user.photoURL.toString(),
       createdAt: time,
       isOnline: false,

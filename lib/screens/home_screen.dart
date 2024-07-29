@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_text_2/models/chat_user.dart';
 import 'package:we_text_2/screens/auth/login_screen.dart'; // Make sure this path is correct
+import 'package:we_text_2/screens/profile_screen.dart';
 import 'package:we_text_2/widgets/chat_user_card.dart'; // Make sure this path is correct
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
@@ -36,17 +37,19 @@ class MyHomeScreenState extends State<HomeScreen> {
       backgroundColor: hexToColor('#293d3d'),
       appBar: AppBar(
         centerTitle: false,
-        title: Text('We Text'),
+        title: Text('WeText'),
         leading: Icon(Icons.home, size: 30, color: Colors.white),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.search, size: 30),
+            icon: Icon(Icons.search, size: 25),
             color: Colors.white,
           ),
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.more_horiz, size: 30),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: list[0],)));
+            },
+            icon: Icon(CupertinoIcons.person, size: 25),
             color: Colors.white,
           ),
         ],
@@ -84,6 +87,7 @@ class MyHomeScreenState extends State<HomeScreen> {
               // }
 
               list = data?.map((e)=>ChatUser.fromJson(e.data())).toList() ?? [];
+
               if(list.isNotEmpty){
                 return ListView.builder(
                   padding: EdgeInsets.only(top: 4, bottom: 50),
