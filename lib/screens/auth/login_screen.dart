@@ -18,6 +18,11 @@ class LoginScreen extends StatefulWidget{
 }
 
 class LoginScreenState extends State<LoginScreen> {
+
+  Color hexToColor(String hexCode) {
+    return Color(int.parse(hexCode.substring(1, 7),radix: 16) + 0xFF000000);
+  }
+
   bool isAnimate = false;
 
   //One example from animation widgets flutter site
@@ -102,6 +107,7 @@ class LoginScreenState extends State<LoginScreen> {
 
 
     return Scaffold(
+      backgroundColor: hexToColor('#293d3d'),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Welcome to WeText')
@@ -120,7 +126,7 @@ class LoginScreenState extends State<LoginScreen> {
           AnimatedPositioned(
             top: mq.height * .15,
               width: mq.width * .5,
-              right: isAnimate ? mq.width * .25 : -mq.width * .5,
+              right: isAnimate ? mq.width * .20 : -mq.width * .5,
               child: Image.asset('assets/images/phone.png'),
             duration: Duration(seconds: 1),
           ),

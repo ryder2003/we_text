@@ -19,8 +19,8 @@ class ProfileScreen extends StatefulWidget{
 class ProfileScreenState extends State<ProfileScreen>{
   final _formKey = GlobalKey<FormState>();
 
-  Color hexToColor(String hexCode){
-    return Color(int.parse(hexCode.substring(1,7),radix: 16) + 0xF000000);
+  Color hexToColor(String hexCode) {
+    return Color(int.parse(hexCode.substring(1, 7),radix: 16) + 0xFF000000);
   }
 
   @override
@@ -29,10 +29,11 @@ class ProfileScreenState extends State<ProfileScreen>{
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).unfocus(),
       child: Scaffold(
-        //backgroundColor: Colors.grey,
+        backgroundColor: hexToColor('#293d3d'),
        appBar: AppBar(
          title: Text("Profile Details",style: TextStyle(fontSize: 25),),
          centerTitle: false,
+         iconTheme: IconThemeData(color: Colors.white),
        ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 10),
@@ -102,21 +103,29 @@ class ProfileScreenState extends State<ProfileScreen>{
                   //for adding some space, we can use sized box
                   SizedBox(height: mq.height * .019,),
 
-                  Text(widget.user.email,style: TextStyle(color: Colors.black54,fontSize: 16),),
+                  Text(widget.user.email,style: TextStyle(color: Colors.white,fontSize: 16),),
                   //for adding some space, we can use sized box
                   SizedBox(height: mq.height * .04,),
 
                   TextFormField(
-                    initialValue: widget.user.name,
+                    initialValue: widget.user.name,style: TextStyle(color: Colors.white),
                     onSaved: (val) => APIs.me.name = val ?? '',
                     validator: (val)=>val != null && val.isNotEmpty ? null : 'Required Field' ,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)
                       ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.yellow,width: 2.5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       hintText: "eg. Mickey Mouse",
-                      prefixIcon: Icon(Icons.person,),
-                      label: Text("Name")
+                      prefixIcon: Icon(Icons.person,color: Colors.white,),
+                      label: Text("Name",style: TextStyle(color: Colors.white),)
                     ),
                   ),
 
@@ -124,7 +133,7 @@ class ProfileScreenState extends State<ProfileScreen>{
                   SizedBox(height: mq.height * .03,),
 
                   TextFormField(
-                    initialValue: widget.user.about,
+                    initialValue: widget.user.about, style: TextStyle(color: Colors.white),
                     onSaved: (val)=>APIs.me.about = val ?? '',
                     validator: (val)=>val != null && val.isNotEmpty ? null : 'Required Field' ,
 
@@ -132,9 +141,17 @@ class ProfileScreenState extends State<ProfileScreen>{
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12)
                         ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular((12))
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.yellow,width: 2.5)
+                        ),
                         hintText: "eg. Feeling Happy",
-                        prefixIcon: Icon(Icons.info),
-                        label: Text("About")
+                        prefixIcon: Icon(Icons.info,color: Colors.white,),
+                        label: Text("About",style: TextStyle(color: Colors.white))
                     ),
                   ),
 
