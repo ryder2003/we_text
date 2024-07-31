@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +107,7 @@ class ProfileScreenState extends State<ProfileScreen>{
                   SizedBox(height: mq.height * .04,),
 
                   TextFormField(
-                    initialValue: widget.user.name ?? '',
+                    initialValue: widget.user.name,
                     onSaved: (val) => APIs.me.name = val ?? '',
                     validator: (val)=>val != null && val.isNotEmpty ? null : 'Required Field' ,
                     decoration: InputDecoration(
