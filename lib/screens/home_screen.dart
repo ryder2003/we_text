@@ -26,19 +26,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class MyHomeScreenState extends State<HomeScreen> {
+  List<ChatUser> list = [];
+  @override
+  void initState() {
+    super.initState();
+    APIs.getSelfInfo();
+  }
+
   Color hexToColor(String hexCode) {
     return Color(int.parse(hexCode.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
   Widget build(BuildContext context) {
-    List<ChatUser> list = [];
+
     return Scaffold(
       backgroundColor: hexToColor('#293d3d'),
       appBar: AppBar(
         centerTitle: false,
         title: Text('WeText'),
-        leading: Icon(Icons.home, size: 30, color: Colors.white),
+        leading: Icon(Icons.home, size: 28, color: Colors.white),
         actions: [
           IconButton(
             onPressed: () {},
@@ -47,7 +54,7 @@ class MyHomeScreenState extends State<HomeScreen> {
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: list[0],)));
+              Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: APIs.me,)));
             },
             icon: Icon(CupertinoIcons.person, size: 25),
             color: Colors.white,
@@ -69,7 +76,7 @@ class MyHomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: StreamBuilder(
-        stream: APIs.firestore.collection('users').snapshots(),
+        stream: APIs.getAllUsers(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
