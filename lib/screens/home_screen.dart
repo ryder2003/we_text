@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_text_2/api/apis.dart'; // Make sure this path is correct
 import 'package:we_text_2/main.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_text_2/models/chat_user.dart';
 import 'package:we_text_2/screens/auth/login_screen.dart'; // Make sure this path is correct
