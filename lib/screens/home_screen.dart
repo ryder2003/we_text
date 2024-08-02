@@ -26,7 +26,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class MyHomeScreenState extends State<HomeScreen> {
-  List<ChatUser> list = [];
+  //for storing all users
+  List<ChatUser> _list = [];
+  //for storing search items
+  final List<ChatUser> _searchList = [];
+  //for storing search status
+  bool _isSearching = false;
+
   @override
   void initState() {
     super.initState();
@@ -44,19 +50,49 @@ class MyHomeScreenState extends State<HomeScreen> {
       backgroundColor: hexToColor('#293d3d'),
       appBar: AppBar(
         centerTitle: false,
-        title: Text('WeText'),
+        title: _isSearching ? TextField(
+          style: TextStyle(color: Colors.white,fontSize: 17,letterSpacing: 0.8),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: ("Name, email,...."),
+            hintStyle: TextStyle(color: Colors.grey.shade600,fontSize: 15),
+            hintMaxLines: 1
+          ),
+          autofocus: true,
+
+          onChanged: (val){
+            //search Logic part
+            _searchList.clear();
+            for(var i in _list){
+              if(i.name.toLowerCase().contains(val.toLowerCase()) ||
+                  i.email.toLowerCase().contains(val.toLowerCase())){
+                _searchList.add(i);
+              }
+            }
+
+            setState(() {
+              _searchList;
+            });
+          },
+
+        ) : Text('WeText'),
         leading: Icon(Icons.home, size: 28, color: Colors.white),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search, size: 25),
+            onPressed: () {
+              setState(() {
+                _isSearching = !_isSearching;
+              });
+            },
+            icon: Icon(_isSearching ? CupertinoIcons.clear_circled_solid : Icons.search, size: 22),
             color: Colors.white,
           ),
+
           IconButton(
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: APIs.me,)));
             },
-            icon: Icon(CupertinoIcons.person, size: 25),
+            icon: Icon(CupertinoIcons.person, size: 22),
             color: Colors.white,
           ),
         ],
@@ -93,15 +129,15 @@ class MyHomeScreenState extends State<HomeScreen> {
               //   print("\nData: ${i.data()}");
               // }
 
-              list = data?.map((e)=>ChatUser.fromJson(e.data())).toList() ?? [];
+              _list = data?.map((e)=>ChatUser.fromJson(e.data())).toList() ?? [];
 
-              if(list.isNotEmpty){
+              if(_list.isNotEmpty){
                 return ListView.builder(
                   padding: EdgeInsets.only(top: 4, bottom: 50),
-                  itemCount: list.length,
+                  itemCount: _isSearching ? _searchList.length : _list.length,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return ChatUserCard(user__: list[index],);
+                    return ChatUserCard(user__: _isSearching ? _searchList[index] : _list[index],);
                   },
                 );
               }

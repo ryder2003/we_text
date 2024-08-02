@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-            centerTitle: true,
+            centerTitle: false,
+            iconTheme: IconThemeData(color: Colors.white),
             elevation: 1,
             backgroundColor: Colors.black54,
             titleTextStyle: TextStyle(
