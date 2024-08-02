@@ -43,111 +43,129 @@ class MyHomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      backgroundColor: hexToColor('#293d3d'),
-      appBar: AppBar(
-        centerTitle: false,
-        title: _isSearching ? TextField(
-          style: TextStyle(color: Colors.white,fontSize: 17,letterSpacing: 0.8),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: ("Name, email,...."),
-            hintStyle: TextStyle(color: Colors.grey.shade600,fontSize: 15),
-            hintMaxLines: 1
-          ),
-          autofocus: true,
-
-          onChanged: (val){
-            //search Logic part
-            _searchList.clear();
-            for(var i in _list){
-              if(i.name.toLowerCase().contains(val.toLowerCase()) ||
-                  i.email.toLowerCase().contains(val.toLowerCase())){
-                _searchList.add(i);
-              }
-            }
-
+    return GestureDetector(
+      onTap: FocusScope.of(context).unfocus,
+      //purpose of willPop is to avoid closing of app when back button is pressed when searching is on (or an condition according to choice)
+      child: WillPopScope(
+        onWillPop: (){
+          if(_isSearching){
             setState(() {
-              _searchList;
+              _isSearching = !_isSearching;
             });
-          },
-
-        ) : Text('WeText'),
-        leading: Icon(Icons.home, size: 28, color: Colors.white),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _isSearching = !_isSearching;
-              });
-            },
-            icon: Icon(_isSearching ? CupertinoIcons.clear_circled_solid : Icons.search, size: 22),
-            color: Colors.white,
-          ),
-
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: APIs.me,)));
-            },
-            icon: Icon(CupertinoIcons.person, size: 22),
-            color: Colors.white,
-          ),
-        ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 12, right: 10),
-        child: FloatingActionButton(
-          onPressed: () async {
-            await APIs.auth.signOut(); // Ensure APIs.auth is correctly initialized
-            await GoogleSignIn().signOut();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => LoginScreen()),
-            );
-          },
-          child: Icon(Icons.add_comment_rounded),
-        ),
-      ),
-      body: StreamBuilder(
-        stream: APIs.getAllUsers(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-            case ConnectionState.none:
-              return const Center(child: CircularProgressIndicator());
-
-            case ConnectionState.active:
-            case ConnectionState.done:
-
-              final data = snapshot.data?.docs;
-
-              //This will print data in json format which can be directly used to generate dart code
-              // for(var i in data!){
-              //   print("\nData: ${i.data()}");
-              // }
-
-              _list = data?.map((e)=>ChatUser.fromJson(e.data())).toList() ?? [];
-
-              if(_list.isNotEmpty){
-                return ListView.builder(
-                  padding: EdgeInsets.only(top: 4, bottom: 50),
-                  itemCount: _isSearching ? _searchList.length : _list.length,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return ChatUserCard(user__: _isSearching ? _searchList[index] : _list[index],);
-                  },
-                );
-              }
-              else{
-                return Center(
-                  child: Text("No Recent Chats!",style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.white
-                  ),),
-                );
-              }
+            return Future.value(false);
           }
+          else{
+            return Future.value(true); //false for doing nothing, true for normal back button operation
+          }
+
         },
+        child: Scaffold(
+          backgroundColor: hexToColor('#293d3d'),
+          appBar: AppBar(
+            centerTitle: false,
+            title: _isSearching ? TextField(
+              style: TextStyle(color: Colors.white,fontSize: 17,letterSpacing: 0.8),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: ("Name, email,...."),
+                hintStyle: TextStyle(color: Colors.grey.shade600,fontSize: 15),
+                hintMaxLines: 1
+              ),
+              autofocus: true,
+
+              onChanged: (val){
+                //search Logic part
+                _searchList.clear();
+                for(var i in _list){
+                  if(i.name.toLowerCase().contains(val.toLowerCase()) ||
+                      i.email.toLowerCase().contains(val.toLowerCase())){
+                    _searchList.add(i);
+                  }
+                }
+
+                setState(() {
+                  _searchList;
+                });
+              },
+
+            ) : Text('WeText'),
+            leading: Icon(Icons.home, size: 28, color: Colors.white),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isSearching = !_isSearching;
+                  });
+                },
+                icon: Icon(_isSearching ? CupertinoIcons.clear_circled_solid : Icons.search, size: 22),
+                color: Colors.white,
+              ),
+
+              IconButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen(user: APIs.me,)));
+                },
+                icon: Icon(CupertinoIcons.person, size: 22),
+                color: Colors.white,
+              ),
+            ],
+          ),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 12, right: 10),
+            child: FloatingActionButton(
+              onPressed: () async {
+                await APIs.auth.signOut(); // Ensure APIs.auth is correctly initialized
+                await GoogleSignIn().signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                );
+              },
+              child: Icon(Icons.add_comment_rounded),
+            ),
+          ),
+          body: StreamBuilder(
+            stream: APIs.getAllUsers(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                case ConnectionState.none:
+                  return const Center(child: CircularProgressIndicator());
+
+                case ConnectionState.active:
+                case ConnectionState.done:
+
+                  final data = snapshot.data?.docs;
+
+                  //This will print data in json format which can be directly used to generate dart code
+                  // for(var i in data!){
+                  //   print("\nData: ${i.data()}");
+                  // }
+
+                  _list = data?.map((e)=>ChatUser.fromJson(e.data())).toList() ?? [];
+
+                  if(_list.isNotEmpty){
+                    return ListView.builder(
+                      padding: EdgeInsets.only(top: 4, bottom: 50),
+                      itemCount: _isSearching ? _searchList.length : _list.length,
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return ChatUserCard(user__: _isSearching ? _searchList[index] : _list[index],);
+                      },
+                    );
+                  }
+                  else{
+                    return Center(
+                      child: Text("No Recent Chats!",style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.white
+                      ),),
+                    );
+                  }
+              }
+            },
+          ),
+        ),
       ),
     );
   }
