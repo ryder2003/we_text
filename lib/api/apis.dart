@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:we_text_2/models/chat_user.dart';
 
 class APIs{
@@ -8,6 +9,9 @@ class APIs{
 
   //for accessing cloud firestore databse
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  //for accessing cloud firebase Storage
+  static FirebaseStorage storage = FirebaseStorage.instance;
 
   //For storing self information
   static late ChatUser me;

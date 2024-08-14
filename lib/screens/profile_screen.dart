@@ -1,7 +1,11 @@
+
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:we_text_2/api/apis.dart';
 import 'package:we_text_2/helper/dialogs.dart';
 import 'package:we_text_2/models/chat_user.dart';
@@ -18,6 +22,7 @@ class ProfileScreen extends StatefulWidget{
 
 class ProfileScreenState extends State<ProfileScreen>{
   final _formKey = GlobalKey<FormState>();
+  String? _image;
 
   Color hexToColor(String hexCode) {
     return Color(int.parse(hexCode.substring(1, 7),radix: 16) + 0xFF000000);
@@ -71,12 +76,25 @@ class ProfileScreenState extends State<ProfileScreen>{
 
                   Stack(
                     children: [
+                      _image != null ?
+                      //Image from Local
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(mq.height*.1),
+                        child: Image.file(
+                          File(_image!),
+                          width: mq.height * .2,
+                          height: mq.height * .2,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                      :
+                      //Image from server
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(mq.height*.1),
                         child: CachedNetworkImage(
-                          width: mq.height * .16,
-                          height: mq.height * .16,
-                          fit: BoxFit.fill,
+                          width: mq.height * .2,
+                          height: mq.height * .2,
+                          fit: BoxFit.cover,
                           imageUrl: widget.user.image,
                           //placeholder: (context, url) => CircularProgressIndicator(),
                           errorWidget: (context, url, error) => CircleAvatar(
@@ -85,13 +103,17 @@ class ProfileScreenState extends State<ProfileScreen>{
 
                         ),
                       ),
+
+
                       Positioned(
                         bottom: 1,
                         right: -5,
                         width: mq.width * .2,
                         height: mq.height * .03,
                         child: MaterialButton(
-                            onPressed: (){},
+                          onPressed: (){
+                            _showBottomSheet();
+                          },
                           child: Icon(Icons.edit,color: Colors.orange,size: 20,),
                           color: Colors.grey,
                           shape: CircleBorder(),
@@ -172,13 +194,96 @@ class ProfileScreenState extends State<ProfileScreen>{
                       label: Text("Update",style: TextStyle(fontSize: 23,color: Colors.white),),
                     icon: Icon(Icons.edit,color: Colors.white,size: 25,),
                   )
-                ],
+                ,
+    ]
               ),
             ),
           ),
         ),
-      ),
+
+      )
     );
+  }
+
+  void _showBottomSheet(){
+    showModalBottomSheet(
+        context: context,
+
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
+        ),
+
+        builder: (_){
+      return ListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.only(top: mq.height * .03, bottom: mq.height * .08),
+        children: [
+          Text(
+            "Pick Profile Picture",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          ),
+
+          //To add some space
+          SizedBox(height: mq.height * .02,),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              //Pick from Gallery Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: CircleBorder(),
+                  fixedSize: Size(mq.width * .3,  mq.height * .15)
+                ),
+                onPressed: () async{
+                  final ImagePicker picker = ImagePicker();
+                  
+                  // Pick an image.
+                  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                  if(image != null){
+                    print("Image Path: ${image.path}");
+                    print("Mime Type: ${image.mimeType}");
+                    //For hiding bottom sheet
+                    Navigator.pop(context);
+                    setState(() {
+                      _image = image.path;
+                    });
+                  }
+
+                },
+                child: Image.asset('assets/images/gallery.png')
+              ),
+
+              //Pick from camera button
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: CircleBorder(),
+                      fixedSize: Size(mq.width * .3,  mq.height * .15)
+                  ),
+                  onPressed: () async{
+                    final ImagePicker picker = ImagePicker();
+
+                    // Capture a photo.
+                    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+                    Navigator.pop(context);
+                    if(image != null){
+                      print("Image Path: ${image.path}");
+                      setState(() {
+                        _image = image.path;
+                      });
+                    }
+                  },
+                  child: Image.asset('assets/images/camera.png')
+              ),
+            ],
+          )
+        ],
+      );
+    });
   }
 }
 
