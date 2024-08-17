@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +8,6 @@ import 'package:we_text_2/api/apis.dart';
 import 'package:we_text_2/helper/dialogs.dart';
 import 'package:we_text_2/models/chat_user.dart';
 import 'package:we_text_2/screens/auth/login_screen.dart';
-
 import '../main.dart';
 
 class ProfileScreen extends StatefulWidget{
@@ -245,11 +242,13 @@ class ProfileScreenState extends State<ProfileScreen>{
                   if(image != null){
                     print("Image Path: ${image.path}");
                     print("Mime Type: ${image.mimeType}");
-                    //For hiding bottom sheet
-                    Navigator.pop(context);
+
                     setState(() {
                       _image = image.path;
                     });
+                    APIs.updateProfilePicture(File(_image!));
+                    //For hiding bottom sheet
+                    Navigator.pop(context);
                   }
 
                 },
@@ -268,13 +267,15 @@ class ProfileScreenState extends State<ProfileScreen>{
 
                     // Capture a photo.
                     final XFile? image = await picker.pickImage(source: ImageSource.camera);
-
-                    Navigator.pop(context);
                     if(image != null){
                       print("Image Path: ${image.path}");
+
                       setState(() {
                         _image = image.path;
                       });
+                      APIs.updateProfilePicture(File(_image!));
+                      //To hide bottom sheet
+                      Navigator.pop(context);
                     }
                   },
                   child: Image.asset('assets/images/camera.png')
