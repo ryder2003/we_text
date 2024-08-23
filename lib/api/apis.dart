@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -88,5 +89,10 @@ class APIs{
     await firestore. collection('users').doc(_user.uid).update({
       'image': me.image
     });
+  }
+
+  //Apply Customised Colour
+  static Color hexToColor(String hexCode){
+    return Color(int.parse(hexCode.substring(1, 7),radix: 16) + 0xFF000000);
   }
 }
