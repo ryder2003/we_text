@@ -23,6 +23,14 @@ class ChatScreenState extends State<ChatScreen>{
           automaticallyImplyLeading: false,
           flexibleSpace: _appBar(),
         ),
+        body: GestureDetector(
+          onTap: ()=>FocusScope.of(context).unfocus(),
+          child: Column(
+            children: [
+              _chatInput(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -70,4 +78,66 @@ class ChatScreenState extends State<ChatScreen>{
       ),
     );
   }
+}
+
+Widget _chatInput(){
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: mq.height * .01, horizontal: mq.width * .025),
+    child: Row(
+      children: [
+        //Expanded is used so that card takes maximum space availabe of parent and does not cause any overflow
+        Expanded(
+          child: Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Row(
+              children: [
+                //Emoji button
+                IconButton(
+                    onPressed: (){},
+                    icon: Icon(Icons.emoji_emotions,color: Colors.blue,size: 26,)
+                ),
+
+                //
+                Expanded(
+                  child: TextField(
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline, //To prevent hovering long text, it will adjust according to length of text
+                    decoration: InputDecoration(
+                      hintText: "Type Something....",
+                      hintStyle: TextStyle(color: Colors.blueAccent),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+
+                //Pick Image from gallery button
+                IconButton(
+                    onPressed: (){},
+                    icon: Icon(Icons.image,color: Colors.blue,size: 26,)
+                ),
+
+                //Camera button
+                IconButton(
+                    onPressed: (){},
+                    icon: Icon(Icons.camera_alt,color: Colors.blue,size: 26,)
+                ),
+                //Adding some space
+                SizedBox(width: mq.width * .02)
+              ],
+            ),
+          ),
+        ),
+
+        //Send Button
+        MaterialButton(
+          onPressed: (){},
+          padding: EdgeInsets.only(top: 10,bottom: 10, right: 5, left: 10),
+          minWidth: 0,
+          shape: CircleBorder(),
+          color: Colors.green,
+          child: Icon(Icons.send,color: CupertinoColors.white,size: 28,),
+        )
+      ],
+    ),
+  );
 }
