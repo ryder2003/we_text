@@ -27,6 +27,51 @@ class ChatScreenState extends State<ChatScreen>{
           onTap: ()=>FocusScope.of(context).unfocus(),
           child: Column(
             children: [
+              Expanded(
+                child: StreamBuilder(
+                  stream: APIs.getAllUsers(),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
+                        return const Center(child: CircularProgressIndicator());
+                
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                
+                        // final data = snapshot.data?.docs;
+                
+                        //This will print data in json format which can be directly used to generate dart code
+                        // for(var i in data!){
+                        //   print("\nData: ${i.data()}");
+                        // }
+                
+                        //
+                        final _list = [];
+                
+                        if(_list.isNotEmpty){
+                          return ListView.builder(
+                            padding: EdgeInsets.only(top: 4, bottom: 50),
+                            itemCount: _list.length,
+                            physics: BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Text("Message: ${_list[index]}");
+                            },
+                          );
+                        }
+                        else{
+                          return Center(
+                            child: Text("Say Hii! 👋",style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white
+                            ),),
+                          );
+                        }
+                    }
+                  },
+                ),
+              ),
+              
               _chatInput(),
             ],
           ),
@@ -104,7 +149,7 @@ Widget _chatInput(){
                     keyboardType: TextInputType.multiline, //To prevent hovering long text, it will adjust according to length of text
                     decoration: InputDecoration(
                       hintText: "Type Something....",
-                      hintStyle: TextStyle(color: Colors.blueAccent),
+                      hintStyle: TextStyle(color: Colors.blueAccent, fontSize: 13),
                       border: InputBorder.none,
                     ),
                   ),
