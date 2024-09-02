@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,7 @@ class ChatScreenState extends State<ChatScreen>{
             children: [
               Expanded(
                 child: StreamBuilder(
-                  stream: APIs.getAllUsers(),
+                  stream: APIs.getAllMessages(),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
@@ -39,7 +41,8 @@ class ChatScreenState extends State<ChatScreen>{
                       case ConnectionState.active:
                       case ConnectionState.done:
                 
-                        // final data = snapshot.data?.docs;
+                        final data = snapshot.data?.docs;
+                        print("Data: ${jsonEncode(data![0].data())}");
                 
                         //This will print data in json format which can be directly used to generate dart code
                         // for(var i in data!){
