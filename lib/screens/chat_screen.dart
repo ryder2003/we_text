@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:we_text_2/api/apis.dart';
 import 'package:we_text_2/models/chat_user.dart';
+import 'package:we_text_2/models/messages.dart';
+import 'package:we_text_2/widgets/message_card.dart';
 
 import '../main.dart';
 
@@ -16,6 +18,9 @@ class ChatScreen extends StatefulWidget{
 }
 
 class ChatScreenState extends State<ChatScreen>{
+  //For storing all messages 
+  List<Messages> _list = [];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -48,17 +53,32 @@ class ChatScreenState extends State<ChatScreen>{
                         // for(var i in data!){
                         //   print("\nData: ${i.data()}");
                         // }
-                
+
                         //
-                        final _list = [];
-                
+                        _list.clear();
+                        _list.add(Messages(
+                            msg: 'Hii',
+                            toId: 'xyz',
+                            read: '',
+                            type: Type.text,
+                            fromId: APIs.user.uid ,
+                            sent: '12 AM'));
+
+                        _list.add(Messages(
+                            msg: 'Hello',
+                            toId: APIs.user.uid,
+                            read: '',
+                            type: Type.text,
+                            fromId: 'xyz' ,
+                            sent: '12:05 AM'));
+
                         if(_list.isNotEmpty){
                           return ListView.builder(
                             padding: EdgeInsets.only(top: 4, bottom: 50),
                             itemCount: _list.length,
                             physics: BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
-                              return Text("Message: ${_list[index]}");
+                              return MessageCard(message: _list[index]);
                             },
                           );
                         }

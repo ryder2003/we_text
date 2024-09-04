@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:we_text_2/models/chat_user.dart';
+import '../models/chat_user.dart';
 
 class APIs{
   //For authentication
@@ -20,7 +20,7 @@ class APIs{
   static late ChatUser me;
 
   //To return current user
-  static User get _user =>auth.currentUser!;
+   static User get user =>auth.currentUser!;
 
   //FOR checking user exists or not
   static Future<bool> userExists() async{
@@ -29,10 +29,10 @@ class APIs{
 
   //For getting info of current user
   static Future<void> getSelfInfo() async{
-    await firestore.collection('users').doc(_user.uid).get().then((_user) async{
-      if(_user.exists){
-        me = ChatUser.fromJson(_user.data()!);
-        print("My data: ${_user.data()}");
+    await firestore.collection('users').doc(user.uid).get().then((user) async{
+      if(user.exists){
+        me = ChatUser.fromJson(user.data()!);
+        print("My data: ${user.data()}");
       }
       else{
         await createUser().then((value)=>getSelfInfo());
@@ -44,27 +44,27 @@ class APIs{
   static Future<void> createUser() async{
     final time = DateTime.now().microsecondsSinceEpoch.toString();
     final userChat = ChatUser(
-      id: _user.uid,
-      name: _user.displayName.toString(),
-      email: _user.email.toString(),
+      id: user.uid,
+      name: user.displayName.toString(),
+      email: user.email.toString(),
       about: "Hey, I'm using WeText!",
-      image: _user.photoURL.toString(),
+      image: user.photoURL.toString(),
       createdAt: time,
       isOnline: false,
       lastActive: time,
       pushToken: ''
     );
-    return await firestore.collection('users').doc(_user.uid).set(userChat.toJson());
+    return await firestore.collection('users').doc(user.uid).set(userChat.toJson());
   }
 
   //For getting all users from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(){
-    return firestore.collection('users').where('id',isNotEqualTo: _user.uid).snapshots();
+    return firestore.collection('users').where('id',isNotEqualTo: user.uid).snapshots();
   }
 
   //To update user's personal info
   static Future<void> updateUSerInfo() async{
-    await firestore.collection('users').doc(_user.uid).update({
+    await firestore.collection('users').doc(user.uid).update({
       'name': me.name,
       'about': me.about
     });
@@ -77,7 +77,7 @@ class APIs{
     print("Extension: $ext");
 
     //Storage final reference with path
-    final ref = storage.ref().child('profile_pictures/${_user.uid}.$ext');
+    final ref = storage.ref().child('profile_pictures/${user.uid}.$ext');
 
     //Uploading image
     await ref.putFile(file, SettableMetadata(contentType: "image/$ext")).then((p0){
@@ -86,7 +86,7 @@ class APIs{
 
     //Updating image in firebase database
     me.image = await ref.getDownloadURL();
-    await firestore. collection('users').doc(_user.uid).update({
+    await firestore. collection('users').doc(user.uid).update({
       'image': me.image
     });
   }

@@ -7,8 +7,6 @@ import 'package:we_text_2/models/chat_user.dart';
 import 'package:we_text_2/screens/auth/login_screen.dart'; // Make sure this path is correct
 import 'package:we_text_2/screens/profile_screen.dart';
 import 'package:we_text_2/widgets/chat_user_card.dart'; // Make sure this path is correct
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
-
 void main() {
   runApp(const MyApp());
 }
@@ -74,6 +72,7 @@ class MyHomeScreenState extends State<HomeScreen> {
               autofocus: true,
 
               onChanged: (val){
+
                 //search Logic part
                 _searchList.clear();
                 for(var i in _list){
